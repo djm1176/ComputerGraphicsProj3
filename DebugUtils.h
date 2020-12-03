@@ -9,13 +9,15 @@ namespace DebugUtils {
 	//Draws XYZ coordinate axes at the origin, with each line extending 50 units.
 	void draw_axes() {
 		glBegin(GL_LINES);
-		glColor3ub(100, 100, 100);
+		glColor3ub(200, 50, 50);
 		glVertex3i(0, 0, 0);
 		glVertex3i(50, 0, 0);
 
+		glColor3ub(50, 200, 50);
 		glVertex3i(0, 0, 0);
 		glVertex3i(0, 50, 0);
 
+		glColor3ub(50, 50, 200);
 		glVertex3i(0, 0, 0);
 		glVertex3i(0, 0, 50);
 		glEnd();

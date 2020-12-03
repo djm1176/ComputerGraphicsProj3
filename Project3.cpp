@@ -19,6 +19,10 @@
 #include "DebugUtils.h"
 #include "MathUtils.h"
 
+constexpr bool USE_MULTISAMPLE = true;		// Set to true to use anti-aliasing
+constexpr int WINDOW_SIZE[]{ 800, 600 };	// The main window's width and height at start
+constexpr int HELP_SIZE[]{ 400, 400 };		// The help window's width and height at start
+
 void mainWindowInit();
 void helpWindowInit(); 
 
@@ -35,8 +39,6 @@ void mouseCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
 
-constexpr int WINDOW_SIZE[]{ 800, 600 };
-constexpr int HELP_SIZE[]{ 400, 400 };
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
 int target_x{ 0 }, target_y{ 0 };
@@ -47,6 +49,9 @@ Camera camera;
 int main(int argc, char** argv) {
 
 	glutInit(&argc, argv); // initialization
+	if (USE_MULTISAMPLE) {
+		glutInitDisplayMode(GLUT_MULTISAMPLE);
+	}
 
 	glutInitWindowSize(WINDOW_SIZE[0], WINDOW_SIZE[1]); // specify a window size
 	glutInitWindowPosition(0, 0);						// specify a window position
@@ -103,8 +108,8 @@ void myDisplayCallback() {
 
 	//TODO: Perform all drawing operations
 
-	//DebugUtils::draw_axes();
 	DebugUtils::draw_grid();
+	DebugUtils::draw_axes();
 
 	glFlush();
 }
