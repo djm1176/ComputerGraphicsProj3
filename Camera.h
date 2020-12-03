@@ -28,13 +28,9 @@ public:
 		angle_x += xDeg;
 		angle_y += yDeg;
 
-		x = dist * sin(angle_y) * cos(angle_x);
-		y = dist * sin(angle_y) * sin(angle_x);
-		z = dist * cos(angle_y);
-
-		std::cout << x << ", " << y << ", " << z << std::endl;
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		glRotated(-angle_y, 1.0, 0.0, 0.0);
 		glRotated(angle_x, 0.0, 1.0, 0.0);
 	}
 };
