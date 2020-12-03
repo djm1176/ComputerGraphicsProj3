@@ -12,7 +12,10 @@
 		2.		Press Ctrl+F7 								to COMPILE
 		3.		Press Ctrl+F5 								to EXECUTE
 ==================================================================================================*/
+#include <iostream>
 #include <GL/freeglut.h> // include GLUT library
+
+#include "Camera.h"
 #include "DebugUtils.h"
 
 void mainWindowInit();
@@ -34,6 +37,10 @@ void reshapeCallback(int, int);
 constexpr int WINDOW_SIZE[]{ 800, 600 };
 constexpr int HELP_SIZE[]{ 400, 400 };
 int mainWindow, helpWindow;
+int mouse_x, mouse_y;
+
+bool mouseDown = false;
+Camera camera;
 
 int main(int argc, char** argv) {
 
@@ -44,6 +51,8 @@ int main(int argc, char** argv) {
 	mainWindow = glutCreateWindow("GLUT 3D Advertisement");	// create a titled window
 	mainWindowInit(); // specify some settings
 	menuInit();
+
+	camera = Camera(0, 50, 200);
 
 	glutDisplayFunc(myDisplayCallback); // register a callback
 	glutKeyboardFunc(keyboardCallback);
@@ -76,8 +85,7 @@ void mainWindowInit() {
 	
 	//Specify perspective projection. Aspect ratio is the same ratio of the current (init) window width and height,
 	//near plane is just in front of camera, and far plane is a sizeable 1000.0 units away from the camera's origin
-	gluPerspective(90, (double)WINDOW_SIZE[0] / (double)WINDOW_SIZE[1], 1.0, 1000.0);
-	gluLookAt(200, 200, 200, 0, 0, 0, 0, 1, 0);
+	
 	glEnable(GL_DEPTH_TEST);
 
 	//Initialize the menu used for the main window
@@ -107,12 +115,24 @@ void specialFuncCallback(int, int, int) {
 	//Not needed currently
 }
 
-void mouseCallback(int, int, int, int) {
+void mouseCallback(int button, int state, int x, int y) {
 	//TODO: Daniel make this let the user change orientation of camera
+	mouseDown = (button == GLUT_LEFT && state == GLUT_DOWN);
+	mouse_x = x;
+	mouse_y = y;
 }
 
-void motionCallback(int, int) {
+void motionCallback(int x, int y) {
 	//TODO: Daniel
+	int dx = mouse_x - x;
+	int dy = mouse_y - y;
+	mouse_x = x;
+	mouse_y = y;
+
+	if (mouseDown) {
+		camera.rotate((double)dx, (double)-dy);
+	}
+	myDisplayCallback();
 }
 
 void reshapeCallback(int, int) {
