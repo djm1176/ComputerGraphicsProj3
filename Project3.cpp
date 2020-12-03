@@ -66,6 +66,75 @@ int main(int argc, char** argv) {
 	return 1; // something wrong happened
 }
 
+void mainMenuHandler(int choice) {
+	switch (choice) {
+	case 0:
+		// Reset camera position
+		break;
+	case 1:
+		glutDestroyWindow(helpWindow);
+		glutDestroyWindow(mainWindow);
+		break;
+	default:
+		break;
+	}
+}
+
+void rotationSpeedMenuHandler(int choice) {
+	switch (choice) {
+	case 1:
+		// Decrease Rotation Speed
+		break;
+	case 0:
+		// Increase Rotation Speed
+		break;
+	default:
+		break;
+	}
+}
+
+void helpMenuHandler(int choice) {
+	switch (choice) {
+	case 1:
+		// Hide help menu
+		break;
+	case 0:
+		// Show help menu
+		break;
+	default:
+		break;
+	}
+}
+
+void textControlMenuHandler(int choice) {
+	switch (choice) {
+	case 0:
+		// Show 3d text
+		break;
+	case 1:
+		// Hide 3d text
+		break;
+	default:
+		break;
+	}
+}
+
+void rotationControlMenuHandler(int choice) {
+	switch (choice) {
+	case 0:
+		// Enable rotation
+		break;
+	case 1:
+		// Pause rotation
+		break;
+	case 2:
+		// Disable rotation
+		break;
+	default:
+		break;
+	}
+}
+
 //***********************************************************************************
 // Main Window and Menu Functionality
 //***********************************************************************************
@@ -76,7 +145,28 @@ void mainWindowInit() {
 }
 
 void menuInit() {
-
+	int rotationControlMenu = glutCreateMenu(rotationControlMenuHandler);
+	glutAddMenuEntry("Enable rotation", 0);
+	glutAddMenuEntry("Pause rotation", 1);
+	glutAddMenuEntry("Disable rotation", 2);
+	int rotationSpeedMenu = glutCreateMenu(rotationSpeedMenuHandler);
+	glutAddMenuEntry("Increase speed", 0);
+	glutAddMenuEntry("Decrease speed", 1);
+	int textControlMenu = glutCreateMenu(textControlMenuHandler);
+	glutAddMenuEntry("Show text", 0);
+	glutAddMenuEntry("Hide text", 1);
+	int helpMenu = glutCreateMenu(helpMenuHandler);
+	glutAddMenuEntry("Show", 0);
+	glutAddMenuEntry("Hide", 1);
+	int mainMenu = glutCreateMenu(mainMenuHandler);
+	glutAddSubMenu("Rotation Control", rotationControlMenu);
+	glutAddSubMenu("Adjust Rotation Speed", rotationSpeedMenu);
+	glutAddSubMenu("3D Text Control", textControlMenu);
+	glutAddSubMenu("Help Window", helpMenu);
+	glutAddMenuEntry("Reset Camera Position", 0);
+	glutAddMenuEntry("Exit Program", 1);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+	glutCreateMenu(mainMenuHandler);
 }
 
 void myDisplayCallback() {
