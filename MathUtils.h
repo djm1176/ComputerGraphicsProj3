@@ -4,7 +4,7 @@ namespace Maths {
 	
 	//Linearly interpolates between a and b, by t, which represents a percentage from 0.0 to 1.0
 	static double lerp(double a, double b, double t) {
-		return a + ((b - a) * t);
+		return a + (b - a) * t;
 	}
 
 	//Clamps value between a minimum and maximum

@@ -17,6 +17,7 @@
 
 #include "Camera.h"
 #include "DebugUtils.h"
+#include "MathUtils.h"
 
 void mainWindowInit();
 void helpWindowInit(); 
@@ -38,6 +39,7 @@ constexpr int WINDOW_SIZE[]{ 800, 600 };
 constexpr int HELP_SIZE[]{ 400, 400 };
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
+int target_x{ 0 }, target_y{ 0 };
 
 bool mouseDown = false;
 Camera camera;
@@ -129,8 +131,11 @@ void motionCallback(int x, int y) {
 	mouse_x = x;
 	mouse_y = y;
 
+	target_x = dx;// Maths::lerp(target_x, target_x + dx, 0.99);
+	target_y = dy;// Maths::lerp(target_y, target_y + dy, 0.99);
+
 	if (mouseDown) {
-		camera.rotate((double)dx, (double)-dy);
+		camera.rotate((double)target_x, (double)-target_y);
 	}
 	myDisplayCallback();
 }
