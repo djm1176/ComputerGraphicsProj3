@@ -72,6 +72,7 @@ void mainMenuHandler(int choice) {
 		// Reset camera position
 		break;
 	case 1:
+		// Terminate the program and close all open windows
 		glutDestroyWindow(helpWindow);
 		glutDestroyWindow(mainWindow);
 		break;
@@ -82,11 +83,11 @@ void mainMenuHandler(int choice) {
 
 void rotationSpeedMenuHandler(int choice) {
 	switch (choice) {
-	case 1:
-		// Decrease Rotation Speed
-		break;
 	case 0:
 		// Increase Rotation Speed
+		break;
+	case 1:
+		// Decrease Rotation Speed
 		break;
 	default:
 		break;
@@ -95,11 +96,11 @@ void rotationSpeedMenuHandler(int choice) {
 
 void helpMenuHandler(int choice) {
 	switch (choice) {
-	case 1:
-		// Hide help menu
-		break;
 	case 0:
 		// Show help menu
+		break;
+	case 1:
+		// Hide help menu
 		break;
 	default:
 		break;
