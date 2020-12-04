@@ -125,6 +125,11 @@
   <ItemGroup>
     <ClCompile Include="Project3.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="DebugUtils.h" />
+    <ClInclude Include="MathUtils.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

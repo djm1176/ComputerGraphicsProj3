@@ -12,7 +12,16 @@
 		2.		Press Ctrl+F7 								to COMPILE
 		3.		Press Ctrl+F5 								to EXECUTE
 ==================================================================================================*/
+#include <iostream>
 #include <GL/freeglut.h> // include GLUT library
+
+#include "Camera.h"
+#include "DebugUtils.h"
+#include "MathUtils.h"
+
+constexpr bool USE_MULTISAMPLE = true;		// Set to true to use anti-aliasing
+constexpr int WINDOW_SIZE[]{ 800, 600 };	// The main window's width and height at start
+constexpr int HELP_SIZE[]{ 400, 400 };		// The help window's width and height at start
 
 void mainWindowInit();
 void helpWindowInit(); 
@@ -30,19 +39,27 @@ void mouseCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
 
-constexpr int WINDOW_SIZE[]{ 800, 600 };
-constexpr int HELP_SIZE[]{ 400, 400 };
 int mainWindow, helpWindow;
+int mouse_x, mouse_y;
+int target_x{ 0 }, target_y{ 0 };
+
+bool mouseDown = false;
+Camera camera;
 
 int main(int argc, char** argv) {
 
 	glutInit(&argc, argv); // initialization
+	if (USE_MULTISAMPLE) {
+		glutInitDisplayMode(GLUT_MULTISAMPLE);
+	}
 
 	glutInitWindowSize(WINDOW_SIZE[0], WINDOW_SIZE[1]); // specify a window size
 	glutInitWindowPosition(0, 0);						// specify a window position
 	mainWindow = glutCreateWindow("GLUT 3D Advertisement");	// create a titled window
 	mainWindowInit(); // specify some settings
 	menuInit();
+
+	camera = Camera(0, 50, 200);
 
 	glutDisplayFunc(myDisplayCallback); // register a callback
 	glutKeyboardFunc(keyboardCallback);
@@ -51,6 +68,7 @@ int main(int argc, char** argv) {
 	glutMotionFunc(motionCallback);
 	glutReshapeFunc(reshapeCallback);
 
+	//TODO: This is old code for making a help window, I commented it out for now
 	/*
 	glutInitWindowSize(HELP_SIZE[0], HELP_SIZE[1]);
 	glutInitWindowPosition(200, 50);
@@ -154,8 +172,14 @@ void debugMenuHandler(int choice) {
 //***********************************************************************************
 void mainWindowInit() {
 	glClearColor(1, 1, 1, 1);  // specify a background clor: white
-	gluOrtho2D(0, WINDOW_SIZE[0], WINDOW_SIZE[1], 0);  // specify a viewing area
+	
+	//Specify perspective projection. Aspect ratio is the same ratio of the current (init) window width and height,
+	//near plane is just in front of camera, and far plane is a sizeable 1000.0 units away from the camera's origin
+	
+	glEnable(GL_DEPTH_TEST);
 
+	//Initialize the menu used for the main window
+	menuInit();
 }
 
 void menuInit() {
@@ -188,27 +212,50 @@ void menuInit() {
 }
 
 void myDisplayCallback() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//TODO: Perform all drawing operations
+
+	DebugUtils::draw_grid();
+	DebugUtils::draw_axes();
+
+	glFlush();
 }
 
 void keyboardCallback(unsigned char, int, int) {
-
+	//Not needed currently - Do we have any uses for keyboard callbacks in the main 3D advertisement window?
 }
 
 void specialFuncCallback(int, int, int) {
-
+	//Not needed currently
 }
 
-void mouseCallback(int, int, int, int) {
-
+void mouseCallback(int button, int state, int x, int y) {
+	//TODO: Daniel make this let the user change orientation of camera
+	mouseDown = (button == GLUT_LEFT && state == GLUT_DOWN);
+	mouse_x = x;
+	mouse_y = y;
 }
 
-void motionCallback(int, int) {
+void motionCallback(int x, int y) {
+	//TODO: Daniel
+	int dx = mouse_x - x;
+	int dy = mouse_y - y;
+	mouse_x = x;
+	mouse_y = y;
 
+	target_x = dx;// Maths::lerp(target_x, target_x + dx, 0.99);
+	target_y = dy;// Maths::lerp(target_y, target_y + dy, 0.99);
+
+	if (mouseDown) {
+		camera.rotate((double)target_x, (double)-target_y);
+	}
+	myDisplayCallback();
 }
 
 void reshapeCallback(int, int) {
-
+	//TODO: Window resizing, all we really need to do is modify the camera frustum
+	//I think this can be done simply by re-calling gluPerspective, with new parameters?
 }
 
 //***********************************************************************************
