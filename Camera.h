@@ -33,4 +33,10 @@ public:
 		glRotated(-angle_y, 1.0, 0.0, 0.0);
 		glRotated(angle_x, 0.0, 1.0, 0.0);
 	}
+
+	// Resets the camera position to the original view
+	void resetPosition()
+	{
+		glLoadIdentity();
+	}
 };

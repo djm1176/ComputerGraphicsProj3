@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
 void mainMenuHandler(int choice) {
 	switch (choice) {
 	case 0:
-		// Reset camera position
+		camera.resetPosition();
 		break;
 	case 1:
 		// Terminate the program and close all open windows
@@ -162,7 +162,7 @@ void debugMenuHandler(int choice) {
 		// Toggle axis arrows
 		break;
 	case 1:
-		// Toggle grid
+		// Toggle debug axis
 		break;
 	default:
 		break;
