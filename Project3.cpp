@@ -135,6 +135,19 @@ void rotationControlMenuHandler(int choice) {
 	}
 }
 
+void debugMenuHandler(int choice) {
+	switch (choice) {
+	case 0:
+		// Toggle axis arrows
+		break;
+	case 1:
+		// Toggle grid
+		break;
+	default:
+		break;
+	}
+}
+
 //***********************************************************************************
 // Main Window and Menu Functionality
 //***********************************************************************************
@@ -145,6 +158,9 @@ void mainWindowInit() {
 }
 
 void menuInit() {
+	int debugMenu = glutCreateMenu(debugMenuHandler);
+	glutAddMenuEntry("Toggle axis arrows", 0);
+	glutAddMenuEntry("Toggle grid", 1);
 	int rotationControlMenu = glutCreateMenu(rotationControlMenuHandler);
 	glutAddMenuEntry("Enable rotation", 0);
 	glutAddMenuEntry("Pause rotation", 1);
@@ -163,6 +179,7 @@ void menuInit() {
 	glutAddSubMenu("Adjust Rotation Speed", rotationSpeedMenu);
 	glutAddSubMenu("3D Text Control", textControlMenu);
 	glutAddSubMenu("Help Window", helpMenu);
+	glutAddSubMenu("Debugging Graphics", debugMenu);
 	glutAddMenuEntry("Reset Camera Position", 0);
 	glutAddMenuEntry("Exit Program", 1);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
