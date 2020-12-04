@@ -39,6 +39,8 @@ void mouseCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
 
+void drawText(float, float, float, const char*, float);
+
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
 int target_x{ 0 }, target_y{ 0 };
@@ -59,7 +61,7 @@ int main(int argc, char** argv) {
 	mainWindowInit(); // specify some settings
 	menuInit();
 
-	camera = Camera(0, 50, 200);
+	camera = Camera(0, 50, 200); 
 
 	glutDisplayFunc(myDisplayCallback); // register a callback
 	glutKeyboardFunc(keyboardCallback);
@@ -219,7 +221,25 @@ void myDisplayCallback() {
 	DebugUtils::draw_grid();
 	DebugUtils::draw_axes();
 
+	glColor3ub(100, 100, 100);
+	//x, y, z, text, font size 
+	drawText(-100, 10, 50, "iPhone 3GS", 0.25);
+
 	glFlush();
+}
+
+void drawText(float x, float y, float z, const char* string, float fontSize)
+{
+	const char* c;
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	glScalef(fontSize, fontSize, fontSize);
+
+	for (c = string; *c != '\0'; c++)
+	{
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, *c);
+	}
+	glPopMatrix();
 }
 
 void keyboardCallback(unsigned char, int, int) {
