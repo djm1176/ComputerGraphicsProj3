@@ -38,6 +38,7 @@ void specialFuncCallback(int, int, int);
 void mouseCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
+void timer(int);
 
 void drawText(float, float, float, const char*, float);
 
@@ -45,6 +46,7 @@ int mainWindow, helpWindow;
 int mouse_x, mouse_y;
 int target_x{ 0 }, target_y{ 0 };
 
+bool autoRotate = true;
 bool mouseDown = false;
 Camera camera;
 
@@ -69,6 +71,7 @@ int main(int argc, char** argv) {
 	glutMouseFunc(mouseCallback);
 	glutMotionFunc(motionCallback);
 	glutReshapeFunc(reshapeCallback);
+	glutTimerFunc(0, timer, 0);
 
 	//TODO: This is old code for making a help window, I commented it out for now
 	/*
@@ -253,6 +256,7 @@ void specialFuncCallback(int, int, int) {
 void mouseCallback(int button, int state, int x, int y) {
 	//TODO: Daniel make this let the user change orientation of camera
 	mouseDown = (button == GLUT_LEFT && state == GLUT_DOWN);
+	autoRotate = !(mouseDown);
 	mouse_x = x;
 	mouse_y = y;
 }
@@ -276,6 +280,16 @@ void motionCallback(int x, int y) {
 void reshapeCallback(int, int) {
 	//TODO: Window resizing, all we really need to do is modify the camera frustum
 	//I think this can be done simply by re-calling gluPerspective, with new parameters?
+}
+
+void timer(int value) {
+	const double static_x{ 1.0 };
+	const double static_y{ 0.0 };
+	if (autoRotate) {
+		camera.rotate(static_x, static_y);
+	}
+	myDisplayCallback();
+	glutTimerFunc(30, timer, 0);
 }
 
 //***********************************************************************************
