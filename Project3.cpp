@@ -1,10 +1,10 @@
 /*==================================================================================================
  COURSE:				  CSC 525/625
  ASSIGNMENT:			  Project 3
- PROGRAMMER:			  
+ PROGRAMMER:
  LAST MODIFIED DATE:	  11/29/2020
  DESCRIPTION:			  3D Interactive Advertisement
- NOTE:					  
+ NOTE:
  FILES:					  Project3.cpp, (ComputerGraphicsProj3.sln, ...)
  IDE/COMPILER:			  Microsoft Visual Studio 2019
  INSTRUCTION FOR COMPILATION AND EXECUTION:
@@ -14,6 +14,7 @@
 ==================================================================================================*/
 #include <iostream>
 #include <GL/freeglut.h> // include GLUT library
+#include <string>
 
 #include "Camera.h"
 #include "DebugUtils.h"
@@ -24,7 +25,7 @@ constexpr int WINDOW_SIZE[]{ 800, 600 };	// The main window's width and height a
 constexpr int HELP_SIZE[]{ 400, 400 };		// The help window's width and height at start
 
 void mainWindowInit();
-void helpWindowInit(); 
+void helpWindowInit();
 
 void menuInit();
 
@@ -39,15 +40,25 @@ void mouseCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
 void timer(int);
+void addRotationSpeed(double);
 
 void drawText(float, float, float, const char*, float);
 
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
-int target_x{ 0 }, target_y{ 0 };
+double target_x{ 0.0 }, target_y{ 0.0 }, mouse_dx{ 0.0 }, mouse_dy{ 0.0 };
 
-bool autoRotate = true;
-bool mouseDown = false;
+bool debug_axes{ false }, debug_grid{ false }, draw_text{ true };
+
+
+//enabled		The camera is currently rotating automatically
+//paused		The user is dragging, and auto-rotation is 'paused' and will resume on mouse release
+//disabled		Auto rotation is disabled until re-enabled in the right-click menu
+enum RotationMode { enabled, paused, disabled };
+RotationMode autoRotation = RotationMode::enabled;
+double rotationSpeed{ 0.25 };
+
+bool mouseDown = false, motionLastFrame = false;
 Camera camera;
 
 int main(int argc, char** argv) {
@@ -63,7 +74,7 @@ int main(int argc, char** argv) {
 	mainWindowInit(); // specify some settings
 	menuInit();
 
-	camera = Camera(0, 50, 200); 
+	camera = Camera(0, 50, 200);
 
 	glutDisplayFunc(myDisplayCallback); // register a callback
 	glutKeyboardFunc(keyboardCallback);
@@ -108,9 +119,11 @@ void rotationSpeedMenuHandler(int choice) {
 	switch (choice) {
 	case 0:
 		// Increase Rotation Speed
+		addRotationSpeed(1.0);
 		break;
 	case 1:
 		// Decrease Rotation Speed
+		addRotationSpeed(-1.0);
 		break;
 	default:
 		break;
@@ -134,9 +147,11 @@ void textControlMenuHandler(int choice) {
 	switch (choice) {
 	case 0:
 		// Show 3d text
+		draw_text = true;
 		break;
 	case 1:
 		// Hide 3d text
+		draw_text = false;
 		break;
 	default:
 		break;
@@ -147,12 +162,11 @@ void rotationControlMenuHandler(int choice) {
 	switch (choice) {
 	case 0:
 		// Enable rotation
+		autoRotation = RotationMode::enabled;
 		break;
 	case 1:
-		// Pause rotation
-		break;
-	case 2:
 		// Disable rotation
+		autoRotation = RotationMode::disabled;
 		break;
 	default:
 		break;
@@ -163,9 +177,11 @@ void debugMenuHandler(int choice) {
 	switch (choice) {
 	case 0:
 		// Toggle axis arrows
+		debug_axes = !debug_axes;
 		break;
 	case 1:
 		// Toggle debug axis
+		debug_grid = !debug_grid;
 		break;
 	default:
 		break;
@@ -177,10 +193,10 @@ void debugMenuHandler(int choice) {
 //***********************************************************************************
 void mainWindowInit() {
 	glClearColor(1, 1, 1, 1);  // specify a background clor: white
-	
+
 	//Specify perspective projection. Aspect ratio is the same ratio of the current (init) window width and height,
 	//near plane is just in front of camera, and far plane is a sizeable 1000.0 units away from the camera's origin
-	
+
 	glEnable(GL_DEPTH_TEST);
 
 	//Initialize the menu used for the main window
@@ -193,8 +209,7 @@ void menuInit() {
 	glutAddMenuEntry("Toggle grid", 1);
 	int rotationControlMenu = glutCreateMenu(rotationControlMenuHandler);
 	glutAddMenuEntry("Enable rotation", 0);
-	glutAddMenuEntry("Pause rotation", 1);
-	glutAddMenuEntry("Disable rotation", 2);
+	glutAddMenuEntry("Disable rotation", 1);
 	int rotationSpeedMenu = glutCreateMenu(rotationSpeedMenuHandler);
 	glutAddMenuEntry("Increase speed", 0);
 	glutAddMenuEntry("Decrease speed", 1);
@@ -221,32 +236,62 @@ void myDisplayCallback() {
 
 	//TODO: Perform all drawing operations
 
-	DebugUtils::draw_grid();
-	DebugUtils::draw_axes();
+	if (debug_axes) DebugUtils::draw_axes();
 
-	glColor3ub(100, 100, 100);
-	//x, y, z, text, font size 
-	drawText(-100, 10, 50, "iPhone 3GS", 0.25);
+	if (debug_grid) DebugUtils::draw_grid();
 
+	if (draw_text) {
+		//Place all text drawing operations here
+
+
+		glColor3ub(100, 100, 100);
+		drawText(-100, 10, 50, "iPhone 3GS", 0.25);
+		drawText(0, 100, 0, std::to_string(target_x).c_str(), 0.05);
+		drawText(0, 92, 0, std::to_string(target_y).c_str(), 0.05);
+	}
+
+	//Perform smooth camera rotation
+	target_x = Maths::lerp(target_x, mouse_dx, 0.1);
+	target_y = Maths::lerp(target_y, mouse_dy, 0.1);
+
+	if (!motionLastFrame) {
+		//These values don't get set to 0 from "no mouse movement"
+		//since the motionCallback doesn't happen when mouse doesn't move
+		mouse_dx = 0;
+		mouse_dy = 0;
+	}
+	if (mouseDown) {
+		camera.rotate(target_x, -target_y);
+	}
+
+
+
+
+	motionLastFrame = false;
 	glFlush();
 }
 
-void drawText(float x, float y, float z, const char* string, float fontSize)
-{
+void drawText(float x, float y, float z, const char* string, float fontSize) {
 	const char* c;
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glScalef(fontSize, fontSize, fontSize);
 
-	for (c = string; *c != '\0'; c++)
-	{
+	for (c = string; *c != '\0'; c++) {
 		glutStrokeCharacter(GLUT_STROKE_ROMAN, *c);
 	}
 	glPopMatrix();
 }
 
-void keyboardCallback(unsigned char, int, int) {
-	//Not needed currently - Do we have any uses for keyboard callbacks in the main 3D advertisement window?
+void keyboardCallback(unsigned char ch, int x, int y) {
+	switch (ch) {
+	case 'e':
+		addRotationSpeed(0.05);
+		break;
+	case 'q':
+		addRotationSpeed(-0.05);
+		break;
+	}
 }
 
 void specialFuncCallback(int, int, int) {
@@ -256,24 +301,35 @@ void specialFuncCallback(int, int, int) {
 void mouseCallback(int button, int state, int x, int y) {
 	//TODO: Daniel make this let the user change orientation of camera
 	mouseDown = (button == GLUT_LEFT && state == GLUT_DOWN);
-	autoRotate = !(mouseDown);
+
+	//Auto rotation
+	if (mouseDown) {
+		//Pause the rotation (if the feature is enabled)
+		if (autoRotation == RotationMode::enabled) {
+			autoRotation = RotationMode::paused;
+		}
+	} else {
+		//Only re-enable rotation if it's paused (shouldn't rotate if it's disabled)
+		if (autoRotation == RotationMode::paused) {
+			autoRotation = RotationMode::enabled;
+		}
+	}
+
 	mouse_x = x;
 	mouse_y = y;
 }
 
 void motionCallback(int x, int y) {
-	//TODO: Daniel
-	int dx = mouse_x - x;
-	int dy = mouse_y - y;
+	mouse_dx = mouse_x - x;
+	mouse_dy = mouse_y - y;
 	mouse_x = x;
 	mouse_y = y;
 
-	target_x = dx;// Maths::lerp(target_x, target_x + dx, 0.99);
-	target_y = dy;// Maths::lerp(target_y, target_y + dy, 0.99);
+	//Camera movement with mouse click moved to a linearly-interpolated function in displayFunc (Ask Daniel)
+	//target_x = dx;
+	//target_y = dy;
 
-	if (mouseDown) {
-		camera.rotate((double)target_x, (double)-target_y);
-	}
+	motionLastFrame = true;
 	myDisplayCallback();
 }
 
@@ -283,13 +339,17 @@ void reshapeCallback(int, int) {
 }
 
 void timer(int value) {
-	const double static_x{ 1.0 };
-	const double static_y{ 0.0 };
-	if (autoRotate) {
-		camera.rotate(static_x, static_y);
+	if (autoRotation == RotationMode::enabled) {
+		camera.rotate(rotationSpeed, 0.0);
 	}
 	myDisplayCallback();
-	glutTimerFunc(30, timer, 0);
+	glutTimerFunc(16, timer, 0); //16msec = 60fps
+}
+
+//Add or subtract to the current camera auto rotation
+void addRotationSpeed(double offset) {
+	//Add or subtract, and clamp the value between some magic numbers
+	rotationSpeed = Maths::clamp(rotationSpeed + offset, 3.0, 0.05);
 }
 
 //***********************************************************************************

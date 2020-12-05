@@ -37,6 +37,8 @@ public:
 	// Resets the camera position to the original view
 	void resetPosition()
 	{
+		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+
 	}
 };
