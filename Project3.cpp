@@ -396,6 +396,7 @@ void reshapeCallback(int, int)
 
 void timer(int value)
 {
+	glutSetWindow(mainWindow);
 	if (autoRotation == RotationMode::enabled)
 	{
 		camera.rotate(rotationSpeed, 0.0);
