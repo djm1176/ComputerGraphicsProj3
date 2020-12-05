@@ -19,6 +19,7 @@
 #include "Camera.h"
 #include "DebugUtils.h"
 #include "MathUtils.h"
+#include "Obj.h"
 
 constexpr bool USE_MULTISAMPLE = true;		// Set to true to use anti-aliasing
 constexpr int WINDOW_SIZE[]{ 800, 600 };	// The main window's width and height at start
