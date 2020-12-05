@@ -51,6 +51,8 @@ double target_x{ 0.0 }, target_y{ 0.0 }, mouse_dx{ 0.0 }, mouse_dy{ 0.0 };
 
 bool debug_axes{ false }, debug_grid{ false }, draw_text{ true };
 
+double model_scale{ 5.0 };
+
 
 //enabled		The camera is currently rotating automatically
 //paused		The user is dragging, and auto-rotation is 'paused' and will resume on mouse release
@@ -61,6 +63,7 @@ double rotationSpeed{ 0.25 };
 
 bool mouseDown = false, motionLastFrame = false;
 Camera camera;
+ObjFile teddy{"./models/porche.obj"};
 
 int main(int argc, char** argv) {
 
@@ -265,6 +268,19 @@ void myDisplayCallback() {
 		camera.rotate(target_x, -target_y);
 	}
 
+	//Draw the model
+
+	glPointSize(5);
+	glBegin(GL_TRIANGLES);
+	for (int i = 0; i < teddy.getFaceCount(); i++) {
+		int col = rand() % 100 + 155;
+		glColor3ub(col, col, col);
+		for (auto vertex : teddy.getTriangle(i)) {
+			glVertex3f(vertex[0] * model_scale, vertex[1] * model_scale, vertex[2] * model_scale);
+		}
+	}
+
+	glEnd();
 
 
 

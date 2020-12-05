@@ -11,6 +11,8 @@
 class ObjFile {
 private:
 	std::vector<std::array<float, 3>> obj_vertices;
+	std::vector<std::array<int, 3>> obj_faces;
+
 
 	void read(const char* buf, const char* format, ...) {
 		va_list args;
@@ -28,7 +30,9 @@ public:
 			return;
 		}
 
-		int vcount{ 0 };
+
+		//Load vertices
+		int vcount{ 0 }, fcount{ 0 };
 		for (std::string line; std::getline(in_obj, line);) {
 			char ch;
 			float fx, fy, fz;
@@ -38,13 +42,35 @@ public:
 				vcount++;
 				std::array<float, 3> v{fx, fy, fz};
 				obj_vertices.push_back(v);
+			} else if (ch == 'f') {
+				//This is face indices
+				fcount++;
+				std::array<int, 3> f{ fx, fy, fz };
+				obj_faces.push_back(f);
 			}
 		}
-		std::cout << "Initialized ObjFile with " << vcount << " vertices" << std::endl;
+
+		std::cout << "Initialized ObjFile with " << vcount << " vertices and " << fcount << " faces" << std::endl;
 	}
 
 	const std::vector<std::array<float, 3>>& getVertices() const {
 		return obj_vertices;
+	}
+
+	const std::vector <std::array<int, 3>>& getFaces() const {
+		return obj_faces;
+	}
+
+	const std::array<std::array<float, 3>, 3> getTriangle(int index) const {
+		auto indices = obj_faces.at(index);
+		std::array<std::array<float, 3>, 3> triangle{	obj_vertices.at(indices.at(0) - 1),
+														obj_vertices.at(indices.at(1) - 1),
+														obj_vertices.at(indices.at(2) - 1)};
+		return triangle;
+	}
+
+	int getFaceCount() const {
+		return obj_faces.size();
 	}
 
 };

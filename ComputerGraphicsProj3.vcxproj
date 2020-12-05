@@ -129,6 +129,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DebugUtils.h" />
     <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="Obj.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
