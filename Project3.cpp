@@ -63,7 +63,7 @@ double rotationSpeed{ 0.25 };
 
 bool mouseDown = false, motionLastFrame = false;
 Camera camera;
-ObjFile teddy{"./models/porche.obj"};
+ObjFile teddy{"./models/teddy.obj"};
 
 int main(int argc, char** argv) {
 
@@ -255,8 +255,8 @@ void myDisplayCallback() {
 	}
 
 	//Perform smooth camera rotation
-	target_x = Maths::lerp(target_x, mouse_dx, 0.1);
-	target_y = Maths::lerp(target_y, mouse_dy, 0.1);
+	target_x = Maths::lerp(target_x, mouse_dx, 0.075);
+	target_y = Maths::lerp(target_y, mouse_dy, 0.075);
 
 	if (!motionLastFrame) {
 		//These values don't get set to 0 from "no mouse movement"
