@@ -42,6 +42,7 @@ void motionCallback(int, int);
 void reshapeCallback(int, int);
 void timer(int);
 void addRotationSpeed(double);
+void resetRotationSpeed();
 
 void drawText(float, float, float, const char*, float);
 
@@ -129,6 +130,8 @@ void rotationSpeedMenuHandler(int choice) {
 		// Decrease Rotation Speed
 		addRotationSpeed(-1.0);
 		break;
+	case 2:
+		resetRotationSpeed();
 	default:
 		break;
 	}
@@ -217,12 +220,13 @@ void menuInit() {
 	int rotationSpeedMenu = glutCreateMenu(rotationSpeedMenuHandler);
 	glutAddMenuEntry("Increase speed", 0);
 	glutAddMenuEntry("Decrease speed", 1);
+	glutAddMenuEntry("Reset to default", 2);
 	int textControlMenu = glutCreateMenu(textControlMenuHandler);
 	glutAddMenuEntry("Show text", 0);
 	glutAddMenuEntry("Hide text", 1);
 	int helpMenu = glutCreateMenu(helpMenuHandler);
-	glutAddMenuEntry("Show", 0);
-	glutAddMenuEntry("Hide", 1);
+	glutAddMenuEntry("Show window", 0);
+	glutAddMenuEntry("Hide window", 1);
 	int mainMenu = glutCreateMenu(mainMenuHandler);
 	glutAddSubMenu("Rotation Control", rotationControlMenu);
 	glutAddSubMenu("Adjust Rotation Speed", rotationSpeedMenu);
@@ -367,6 +371,11 @@ void timer(int value) {
 void addRotationSpeed(double offset) {
 	//Add or subtract, and clamp the value between some magic numbers
 	rotationSpeed = Maths::clamp(rotationSpeed + offset, 3.0, 0.05);
+}
+
+// Reset rotation speed to initial value
+void resetRotationSpeed() {
+	rotationSpeed = .25;
 }
 
 //***********************************************************************************
