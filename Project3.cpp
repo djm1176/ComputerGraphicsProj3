@@ -412,6 +412,15 @@ void addRotationSpeed(double offset)
 	rotationSpeed = Maths::clamp(rotationSpeed + offset, 3.0, 0.05);
 }
 
+<<<<<<< Updated upstream
+=======
+// Reset rotation speed to initial value
+void resetRotationSpeed()
+{
+	rotationSpeed = .25;
+}
+
+>>>>>>> Stashed changes
 //***********************************************************************************
 // Help Window and Menu functionality
 //***********************************************************************************
@@ -450,7 +459,11 @@ void drawHelp()
 }
 void drawHelpText(std::string text, int length, int x, int y)
 {
+<<<<<<< Updated upstream
 	glColor3f(0.8, 0.8, 0.8);
+=======
+	glColor3ub(100, 100, 100);
+>>>>>>> Stashed changes
 	glRasterPos2i(x, y);
 	for (auto c : text)
 	{
