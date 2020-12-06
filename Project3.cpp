@@ -277,8 +277,7 @@ void myDisplayCallback()
 		//Place all text drawing operations here
 
 		glColor3ub(100, 100, 100);
-		drawText(-100, 10, 60, "TEDDY BEAR", 0.25);
-		drawText(-100, 100, 50, "NEW AND IMPROVED", .1);
+		drawText(-100, 10, 50, "iPhone 3GS", 0.25);
 		drawText(0, 100, 0, std::to_string(target_x).c_str(), 0.05);
 		drawText(0, 92, 0, std::to_string(target_y).c_str(), 0.05);
 	}
