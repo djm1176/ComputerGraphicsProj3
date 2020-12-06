@@ -417,7 +417,8 @@ void addRotationSpeed(double offset)
 }
 
 // Reset rotation speed to initial value
-void resetRotationSpeed() {
+void resetRotationSpeed()
+{
 	rotationSpeed = .25;
 }
 
@@ -446,9 +447,9 @@ void drawHelp()
 	int y = 180;
 	std::string helpItems[11] = {"Welcome to the 3D Advertisement for IPhone 3GS, Version 1.0, December 2020",
 								 "To change properties about the 3D model, right click the editor to view the menu",
-								 "   Select 'Rotation control' ", "   Select 'Adjust Rotation speed' to change the speed of rotation",
+								 "   Select 'Rotation control' to enable or disable rotation", "   Select 'Adjust Rotation speed' to change the speed of rotation",
 								 "   Select '3D Text Control' control the 3d text", "   Select 'Help Window' to show or hide the help window",
-								 "Select 'Debugging Graphics'", "Select 'Reset Camera Position' to reset the camera's position", "Pressing 'Q' to slow rotation",
+								 "Select 'Debugging Graphics' to toggle axis arrows or toggle debug axis", "Select 'Reset Camera Position' to reset the camera's position", "Pressing 'Q' to slow rotation",
 								 "Press 'E' to speed up rotation", "   Select 'Exit' to leave the program"}; //
 
 	for (int i = 0; i < sizeof(helpItems) / sizeof(helpItems[0]); i++)
