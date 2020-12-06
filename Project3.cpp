@@ -42,6 +42,7 @@ void motionCallback(int, int);
 void reshapeCallback(int, int);
 void timer(int);
 void addRotationSpeed(double);
+void resetRotationSpeed();
 
 void drawText(float, float, float, const char *, float);
 void drawHelpText(std::string text, int length, int x, int y);
@@ -138,6 +139,8 @@ void rotationSpeedMenuHandler(int choice)
 		// Decrease Rotation Speed
 		addRotationSpeed(-1.0);
 		break;
+	case 2:
+		resetRotationSpeed();
 	default:
 		break;
 	}
@@ -238,12 +241,13 @@ void menuInit()
 	int rotationSpeedMenu = glutCreateMenu(rotationSpeedMenuHandler);
 	glutAddMenuEntry("Increase speed", 0);
 	glutAddMenuEntry("Decrease speed", 1);
+	glutAddMenuEntry("Reset to default", 2);
 	int textControlMenu = glutCreateMenu(textControlMenuHandler);
 	glutAddMenuEntry("Show text", 0);
 	glutAddMenuEntry("Hide text", 1);
 	int helpMenu = glutCreateMenu(helpMenuHandler);
-	glutAddMenuEntry("Show", 0);
-	glutAddMenuEntry("Hide", 1);
+	glutAddMenuEntry("Show window", 0);
+	glutAddMenuEntry("Hide window", 1);
 	int mainMenu = glutCreateMenu(mainMenuHandler);
 	glutAddSubMenu("Rotation Control", rotationControlMenu);
 	glutAddSubMenu("Adjust Rotation Speed", rotationSpeedMenu);
@@ -412,15 +416,11 @@ void addRotationSpeed(double offset)
 	rotationSpeed = Maths::clamp(rotationSpeed + offset, 3.0, 0.05);
 }
 
-<<<<<<< Updated upstream
-=======
 // Reset rotation speed to initial value
-void resetRotationSpeed()
-{
+void resetRotationSpeed() {
 	rotationSpeed = .25;
 }
 
->>>>>>> Stashed changes
 //***********************************************************************************
 // Help Window and Menu functionality
 //***********************************************************************************
@@ -459,15 +459,7 @@ void drawHelp()
 }
 void drawHelpText(std::string text, int length, int x, int y)
 {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	glColor3f(0.8, 0.8, 0.8);
-=======
 	glColor3ub(100, 100, 100);
->>>>>>> Stashed changes
-=======
-	glColor3ub(100, 100, 100);
->>>>>>> Stashed changes
 	glRasterPos2i(x, y);
 	for (auto c : text)
 	{

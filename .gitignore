@@ -351,3 +351,6 @@ MigrationBackup/
 
 # Glut (because Alex's won't work without this)
 glut32.lib
+
+# Don't ignore our obj files
+!models/*
