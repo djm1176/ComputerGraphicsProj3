@@ -40,6 +40,7 @@ void motionCallback(int, int);
 void reshapeCallback(int, int);
 
 void drawText(float, float, float, const char*, float);
+void drawBitmapText(float, float, float, const char*, float);
 
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
@@ -115,23 +116,36 @@ void myDisplayCallback() {
 
 	glColor3ub(100, 100, 100);
 	//x, y, z, text, font size 
-	drawText(-100, 10, 50, "iPhone 3GS", 0.25);
+	drawText(-100, 10, 100, "Teddy Bear", 0.25);
+	drawBitmapText(100, 60, 0, "Now extra soft!", 0.25);
+
 
 	glFlush();
 }
 
-void drawText(float x, float y, float z, const char* string, float fontSize)
+void drawText(float x, float y, float z, const char* text, float fontSize)
 {
 	const char* c;
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glScalef(fontSize, fontSize, fontSize);
 
-	for (c = string; *c != '\0'; c++)
+	for (c = text; *c != '\0'; c++)
 	{
 		glutStrokeCharacter(GLUT_STROKE_ROMAN, *c);
 	}
 	glPopMatrix();
+}
+
+void drawBitmapText(float x, float y, float z, const char* text, float fontSize)
+{
+	const char* c;
+	glRasterPos3f(x, y, z);
+
+	for (c = text; *c != '\0'; c++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+	}
 }
 
 void keyboardCallback(unsigned char, int, int) {
