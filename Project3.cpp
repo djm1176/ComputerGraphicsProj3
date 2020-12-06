@@ -23,7 +23,7 @@
 
 constexpr bool USE_MULTISAMPLE = true; // Set to true to use anti-aliasing
 constexpr int WINDOW_SIZE[]{800, 600}; // The main window's width and height at start
-constexpr int HELP_SIZE[]{700, 300};   // The help window's width and height at start
+constexpr int HELP_SIZE[]{750, 300};   // The help window's width and height at start
 
 void mainWindowInit();
 void helpWindowInit();
@@ -38,15 +38,17 @@ void helpKeyboardCallback(unsigned char, int, int);
 
 void specialFuncCallback(int, int, int);
 void mouseCallback(int, int, int, int);
+void wheelCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
 void timer(int);
 void addRotationSpeed(double);
 void resetRotationSpeed();
 
-void drawText(float, float, float, const char *, float);
-void drawHelpText(std::string text, int length, int x, int y);
+void drawText(float, float, float, const char*, float);
+void drawBitmapText(float, float, float, const char*, float);
 void drawHelp();
+void drawHelpText(std::string text, int length, int x, int y);
 
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
@@ -93,6 +95,7 @@ int main(int argc, char **argv)
 	glutKeyboardFunc(keyboardCallback);
 	glutSpecialFunc(specialFuncCallback);
 	glutMouseFunc(mouseCallback);
+	glutMouseWheelFunc(wheelCallback);
 	glutMotionFunc(motionCallback);
 	glutReshapeFunc(reshapeCallback);
 	glutTimerFunc(0, timer, 0);
@@ -269,6 +272,11 @@ void myDisplayCallback()
 	if (debug_axes)
 		DebugUtils::draw_axes();
 
+	glColor3ub(100, 100, 100);
+	//x, y, z, text, font size 
+	drawText(-100, 10, 100, "Teddy Bear", 0.25);
+	drawBitmapText(100, 60, 0, "Now extra soft!", 0.25);
+
 	if (debug_grid)
 		DebugUtils::draw_grid();
 
@@ -277,7 +285,6 @@ void myDisplayCallback()
 		//Place all text drawing operations here
 
 		glColor3ub(100, 100, 100);
-		drawText(-100, 10, 50, "iPhone 3GS", 0.25);
 		drawText(0, 100, 0, std::to_string(target_x).c_str(), 0.05);
 		drawText(0, 92, 0, std::to_string(target_y).c_str(), 0.05);
 	}
@@ -318,18 +325,29 @@ void myDisplayCallback()
 	glFlush();
 }
 
-void drawText(float x, float y, float z, const char *string, float fontSize)
+void drawText(float x, float y, float z, const char* text, float fontSize)
 {
 	const char *c;
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glScalef(fontSize, fontSize, fontSize);
 
-	for (c = string; *c != '\0'; c++)
+	for (c = text; *c != '\0'; c++)
 	{
 		glutStrokeCharacter(GLUT_STROKE_ROMAN, *c);
 	}
 	glPopMatrix();
+}
+
+void drawBitmapText(float x, float y, float z, const char* text, float fontSize)
+{
+	const char* c;
+	glRasterPos3f(x, y, z);
+
+	for (c = text; *c != '\0'; c++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+	}
 }
 
 void keyboardCallback(unsigned char ch, int x, int y)
@@ -377,6 +395,11 @@ void mouseCallback(int button, int state, int x, int y)
 	mouse_y = y;
 }
 
+void wheelCallback(int wheel, int dir, int x, int y) {
+	camera.zoom(dir * 10);
+	std::cout << "Zoom" << std::endl;
+}
+
 void motionCallback(int x, int y)
 {
 	mouse_dx = mouse_x - x;
@@ -417,7 +440,8 @@ void addRotationSpeed(double offset)
 }
 
 // Reset rotation speed to initial value
-void resetRotationSpeed() {
+void resetRotationSpeed()
+{
 	rotationSpeed = .25;
 }
 
@@ -444,17 +468,17 @@ void drawHelp()
 {
 	int x = -195;
 	int y = 180;
-	std::string helpItems[11] = {"Welcome to the 3D Advertisement for IPhone 3GS, Version 1.0, December 2020",
+	std::string helpItems[13] = {"Welcome to the 3D Advertisement for Teddy Bear, Version 1.0, December 2020",
 								 "To change properties about the 3D model, right click the editor to view the menu",
-								 "   Select 'Rotation control' ", "   Select 'Adjust Rotation speed' to change the speed of rotation",
-								 "   Select '3D Text Control' control the 3d text", "   Select 'Help Window' to show or hide the help window",
-								 "Select 'Debugging Graphics'", "Select 'Reset Camera Position' to reset the camera's position", "Pressing 'Q' to slow rotation",
-								 "Press 'E' to speed up rotation", "   Select 'Exit' to leave the program"}; //
+								 "Select 'Rotation control' to enable or disable rotation", "Select 'Adjust Rotation speed' to change the speed of rotation",
+								 "Select '3D Text Control' control the 3d text", "Select 'Help Window' to show or hide the help window",
+								 "Select 'Debugging Graphics' to toggle axis arrows or toggle debug axis", "Select 'Reset Camera Position' to reset the camera's position", "Press 'Q' to slow rotation",
+								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program", "", "Note: Rotation must be disabled before resetting the camera back to defaults."}; //
 
 	for (int i = 0; i < sizeof(helpItems) / sizeof(helpItems[0]); i++)
 	{
 		drawHelpText(helpItems[i], 0, x, y);
-		y -= 15;
+		y -= 22;
 	}
 }
 void drawHelpText(std::string text, int length, int x, int y)
