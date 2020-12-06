@@ -274,8 +274,11 @@ void myDisplayCallback()
 
 	glColor3ub(100, 100, 100);
 	//x, y, z, text, font size 
-	drawText(-100, 10, 100, "Teddy Bear", 0.25);
-	drawBitmapText(100, 60, 0, "Now extra soft!", 0.25);
+	drawText(-75, 80, 100, "Teddy Bear", 0.2);
+	drawBitmapText(60, 60, 0, "REAL FUR!", 0.30);
+	drawBitmapText(-140, 40, 0, "EXTRA soft!", 0.30);
+	drawBitmapText(0, -200, 0, "Includes lifetime warranty!", 0.30);
+
 
 	if (debug_grid)
 		DebugUtils::draw_grid();
