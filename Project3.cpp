@@ -21,9 +21,9 @@
 #include "MathUtils.h"
 #include "Obj.h"
 
-constexpr bool USE_MULTISAMPLE = true;		// Set to true to use anti-aliasing
-constexpr int WINDOW_SIZE[]{ 800, 600 };	// The main window's width and height at start
-constexpr int HELP_SIZE[]{ 400, 400 };		// The help window's width and height at start
+constexpr bool USE_MULTISAMPLE = true; // Set to true to use anti-aliasing
+constexpr int WINDOW_SIZE[]{800, 600}; // The main window's width and height at start
+constexpr int HELP_SIZE[]{700, 300};   // The help window's width and height at start
 
 void mainWindowInit();
 void helpWindowInit();
@@ -44,39 +44,47 @@ void timer(int);
 void addRotationSpeed(double);
 void resetRotationSpeed();
 
-void drawText(float, float, float, const char*, float);
+void drawText(float, float, float, const char *, float);
+void drawHelpText(std::string text, int length, int x, int y);
+void drawHelp();
 
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
-double target_x{ 0.0 }, target_y{ 0.0 }, mouse_dx{ 0.0 }, mouse_dy{ 0.0 };
+double target_x{0.0}, target_y{0.0}, mouse_dx{0.0}, mouse_dy{0.0};
 
-bool debug_axes{ false }, debug_grid{ false }, draw_text{ true };
+bool debug_axes{false}, debug_grid{false}, draw_text{true};
 
-double model_scale{ 5.0 };
-
+double model_scale{5.0};
 
 //enabled		The camera is currently rotating automatically
 //paused		The user is dragging, and auto-rotation is 'paused' and will resume on mouse release
 //disabled		Auto rotation is disabled until re-enabled in the right-click menu
-enum RotationMode { enabled, paused, disabled };
+enum RotationMode
+{
+	enabled,
+	paused,
+	disabled
+};
 RotationMode autoRotation = RotationMode::enabled;
-double rotationSpeed{ 0.25 };
+double rotationSpeed{0.25};
 
 bool mouseDown = false, motionLastFrame = false;
 Camera camera;
 ObjFile teddy{"./models/teddy.obj"};
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 
 	glutInit(&argc, argv); // initialization
-	if (USE_MULTISAMPLE) {
+	if (USE_MULTISAMPLE)
+	{
 		glutInitDisplayMode(GLUT_MULTISAMPLE);
 	}
 
-	glutInitWindowSize(WINDOW_SIZE[0], WINDOW_SIZE[1]); // specify a window size
-	glutInitWindowPosition(0, 0);						// specify a window position
-	mainWindow = glutCreateWindow("GLUT 3D Advertisement");	// create a titled window
-	mainWindowInit(); // specify some settings
+	glutInitWindowSize(WINDOW_SIZE[0], WINDOW_SIZE[1]);		// specify a window size
+	glutInitWindowPosition(0, 0);							// specify a window position
+	mainWindow = glutCreateWindow("GLUT 3D Advertisement"); // create a titled window
+	mainWindowInit();										// specify some settings
 	menuInit();
 
 	camera = Camera(0, 50, 200);
@@ -90,23 +98,22 @@ int main(int argc, char** argv) {
 	glutTimerFunc(0, timer, 0);
 
 	//TODO: This is old code for making a help window, I commented it out for now
-	/*
 	glutInitWindowSize(HELP_SIZE[0], HELP_SIZE[1]);
-	glutInitWindowPosition(200, 50);
+	glutInitWindowPosition(1000, 50);
 	helpWindow = glutCreateWindow("GLUT 3D Advertisement Help");
 	helpWindowInit(); // specify some settings
-
 	glutDisplayFunc(helpDisplayCallback);
 	glutKeyboardFunc(helpKeyboardCallback);
-	*/
 
 	glutMainLoop(); // get into an infinite loop
 
 	return 1; // something wrong happened
 }
 
-void mainMenuHandler(int choice) {
-	switch (choice) {
+void mainMenuHandler(int choice)
+{
+	switch (choice)
+	{
 	case 0:
 		camera.resetPosition();
 		break;
@@ -120,8 +127,10 @@ void mainMenuHandler(int choice) {
 	}
 }
 
-void rotationSpeedMenuHandler(int choice) {
-	switch (choice) {
+void rotationSpeedMenuHandler(int choice)
+{
+	switch (choice)
+	{
 	case 0:
 		// Increase Rotation Speed
 		addRotationSpeed(1.0);
@@ -137,21 +146,27 @@ void rotationSpeedMenuHandler(int choice) {
 	}
 }
 
-void helpMenuHandler(int choice) {
-	switch (choice) {
+void helpMenuHandler(int choice)
+{
+	switch (choice)
+	{
 	case 0:
-		// Show help menu
+		glutSetWindow(helpWindow);
+		glutShowWindow(); // Show help menu
 		break;
 	case 1:
-		// Hide help menu
+		glutSetWindow(helpWindow);
+		glutHideWindow(); // Hide help menu
 		break;
 	default:
 		break;
 	}
 }
 
-void textControlMenuHandler(int choice) {
-	switch (choice) {
+void textControlMenuHandler(int choice)
+{
+	switch (choice)
+	{
 	case 0:
 		// Show 3d text
 		draw_text = true;
@@ -165,8 +180,10 @@ void textControlMenuHandler(int choice) {
 	}
 }
 
-void rotationControlMenuHandler(int choice) {
-	switch (choice) {
+void rotationControlMenuHandler(int choice)
+{
+	switch (choice)
+	{
 	case 0:
 		// Enable rotation
 		autoRotation = RotationMode::enabled;
@@ -180,8 +197,10 @@ void rotationControlMenuHandler(int choice) {
 	}
 }
 
-void debugMenuHandler(int choice) {
-	switch (choice) {
+void debugMenuHandler(int choice)
+{
+	switch (choice)
+	{
 	case 0:
 		// Toggle axis arrows
 		debug_axes = !debug_axes;
@@ -198,8 +217,9 @@ void debugMenuHandler(int choice) {
 //***********************************************************************************
 // Main Window and Menu Functionality
 //***********************************************************************************
-void mainWindowInit() {
-	glClearColor(1, 1, 1, 1);  // specify a background clor: white
+void mainWindowInit()
+{
+	glClearColor(1, 1, 1, 1); // specify a background clor: white
 
 	//Specify perspective projection. Aspect ratio is the same ratio of the current (init) window width and height,
 	//near plane is just in front of camera, and far plane is a sizeable 1000.0 units away from the camera's origin
@@ -210,7 +230,8 @@ void mainWindowInit() {
 	menuInit();
 }
 
-void menuInit() {
+void menuInit()
+{
 	int debugMenu = glutCreateMenu(debugMenuHandler);
 	glutAddMenuEntry("Toggle axis arrows", 0);
 	glutAddMenuEntry("Toggle grid", 1);
@@ -239,18 +260,21 @@ void menuInit() {
 	glutCreateMenu(mainMenuHandler);
 }
 
-void myDisplayCallback() {
+void myDisplayCallback()
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//TODO: Perform all drawing operations
 
-	if (debug_axes) DebugUtils::draw_axes();
+	if (debug_axes)
+		DebugUtils::draw_axes();
 
-	if (debug_grid) DebugUtils::draw_grid();
+	if (debug_grid)
+		DebugUtils::draw_grid();
 
-	if (draw_text) {
+	if (draw_text)
+	{
 		//Place all text drawing operations here
-
 
 		glColor3ub(100, 100, 100);
 		drawText(-100, 10, 50, "iPhone 3GS", 0.25);
@@ -262,13 +286,15 @@ void myDisplayCallback() {
 	target_x = Maths::lerp(target_x, mouse_dx, 0.075);
 	target_y = Maths::lerp(target_y, mouse_dy, 0.075);
 
-	if (!motionLastFrame) {
+	if (!motionLastFrame)
+	{
 		//These values don't get set to 0 from "no mouse movement"
 		//since the motionCallback doesn't happen when mouse doesn't move
 		mouse_dx = 0;
 		mouse_dy = 0;
 	}
-	if (mouseDown) {
+	if (mouseDown)
+	{
 		camera.rotate(target_x, -target_y);
 	}
 
@@ -276,36 +302,40 @@ void myDisplayCallback() {
 
 	glPointSize(5);
 	glBegin(GL_TRIANGLES);
-	for (int i = 0; i < teddy.getFaceCount(); i++) {
+	for (int i = 0; i < teddy.getFaceCount(); i++)
+	{
 		int col = rand() % 100 + 155;
 		glColor3ub(col, col, col);
-		for (auto vertex : teddy.getTriangle(i)) {
+		for (auto vertex : teddy.getTriangle(i))
+		{
 			glVertex3f(vertex[0] * model_scale, vertex[1] * model_scale, vertex[2] * model_scale);
 		}
 	}
 
 	glEnd();
 
-
-
 	motionLastFrame = false;
 	glFlush();
 }
 
-void drawText(float x, float y, float z, const char* string, float fontSize) {
-	const char* c;
+void drawText(float x, float y, float z, const char *string, float fontSize)
+{
+	const char *c;
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glScalef(fontSize, fontSize, fontSize);
 
-	for (c = string; *c != '\0'; c++) {
+	for (c = string; *c != '\0'; c++)
+	{
 		glutStrokeCharacter(GLUT_STROKE_ROMAN, *c);
 	}
 	glPopMatrix();
 }
 
-void keyboardCallback(unsigned char ch, int x, int y) {
-	switch (ch) {
+void keyboardCallback(unsigned char ch, int x, int y)
+{
+	switch (ch)
+	{
 	case 'e':
 		addRotationSpeed(0.05);
 		break;
@@ -315,23 +345,30 @@ void keyboardCallback(unsigned char ch, int x, int y) {
 	}
 }
 
-void specialFuncCallback(int, int, int) {
+void specialFuncCallback(int, int, int)
+{
 	//Not needed currently
 }
 
-void mouseCallback(int button, int state, int x, int y) {
+void mouseCallback(int button, int state, int x, int y)
+{
 	//TODO: Daniel make this let the user change orientation of camera
 	mouseDown = (button == GLUT_LEFT && state == GLUT_DOWN);
 
 	//Auto rotation
-	if (mouseDown) {
+	if (mouseDown)
+	{
 		//Pause the rotation (if the feature is enabled)
-		if (autoRotation == RotationMode::enabled) {
+		if (autoRotation == RotationMode::enabled)
+		{
 			autoRotation = RotationMode::paused;
 		}
-	} else {
+	}
+	else
+	{
 		//Only re-enable rotation if it's paused (shouldn't rotate if it's disabled)
-		if (autoRotation == RotationMode::paused) {
+		if (autoRotation == RotationMode::paused)
+		{
 			autoRotation = RotationMode::enabled;
 		}
 	}
@@ -340,7 +377,8 @@ void mouseCallback(int button, int state, int x, int y) {
 	mouse_y = y;
 }
 
-void motionCallback(int x, int y) {
+void motionCallback(int x, int y)
+{
 	mouse_dx = mouse_x - x;
 	mouse_dy = mouse_y - y;
 	mouse_x = x;
@@ -354,13 +392,17 @@ void motionCallback(int x, int y) {
 	myDisplayCallback();
 }
 
-void reshapeCallback(int, int) {
+void reshapeCallback(int, int)
+{
 	//TODO: Window resizing, all we really need to do is modify the camera frustum
 	//I think this can be done simply by re-calling gluPerspective, with new parameters?
 }
 
-void timer(int value) {
-	if (autoRotation == RotationMode::enabled) {
+void timer(int value)
+{
+	glutSetWindow(mainWindow);
+	if (autoRotation == RotationMode::enabled)
+	{
 		camera.rotate(rotationSpeed, 0.0);
 	}
 	myDisplayCallback();
@@ -368,7 +410,8 @@ void timer(int value) {
 }
 
 //Add or subtract to the current camera auto rotation
-void addRotationSpeed(double offset) {
+void addRotationSpeed(double offset)
+{
 	//Add or subtract, and clamp the value between some magic numbers
 	rotationSpeed = Maths::clamp(rotationSpeed + offset, 3.0, 0.05);
 }
@@ -382,14 +425,47 @@ void resetRotationSpeed() {
 // Help Window and Menu functionality
 //***********************************************************************************
 
-void helpWindowInit() {
-
+void helpWindowInit()
+{
+	glClearColor(0, 0, 0, 0);		  // specify a background clor: black
+	gluOrtho2D(-200, 200, -200, 200); // specify a viewing area
 }
 
-void helpDisplayCallback() {
+void helpDisplayCallback()
+{
+	glClear(GL_COLOR_BUFFER_BIT); // draw the background
 
+	drawHelp();
+
+	glFlush(); // flush out the buffer contents
+	glutSwapBuffers();
 }
+void drawHelp()
+{
+	int x = -195;
+	int y = 180;
+	std::string helpItems[11] = {"Welcome to the 3D Advertisement for IPhone 3GS, Version 1.0, December 2020",
+								 "To change properties about the 3D model, right click the editor to view the menu",
+								 "   Select 'Rotation control' ", "   Select 'Adjust Rotation speed' to change the speed of rotation",
+								 "   Select '3D Text Control' control the 3d text", "   Select 'Help Window' to show or hide the help window",
+								 "Select 'Debugging Graphics'", "Select 'Reset Camera Position' to reset the camera's position", "Pressing 'Q' to slow rotation",
+								 "Press 'E' to speed up rotation", "   Select 'Exit' to leave the program"}; //
 
-void helpKeyboardCallback(unsigned char, int, int) {
-
+	for (int i = 0; i < sizeof(helpItems) / sizeof(helpItems[0]); i++)
+	{
+		drawHelpText(helpItems[i], 0, x, y);
+		y -= 15;
+	}
+}
+void drawHelpText(std::string text, int length, int x, int y)
+{
+	glColor3ub(100, 100, 100);
+	glRasterPos2i(x, y);
+	for (auto c : text)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, (int)c);
+	}
+}
+void helpKeyboardCallback(unsigned char, int, int)
+{
 }
