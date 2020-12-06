@@ -461,17 +461,17 @@ void drawHelp()
 {
 	int x = -195;
 	int y = 180;
-	std::string helpItems[11] = {"Welcome to the 3D Advertisement for IPhone 3GS, Version 1.0, December 2020",
+	std::string helpItems[13] = {"Welcome to the 3D Advertisement for Teddy Bear, Version 1.0, December 2020",
 								 "To change properties about the 3D model, right click the editor to view the menu",
 								 "Select 'Rotation control' to enable or disable rotation", "Select 'Adjust Rotation speed' to change the speed of rotation",
 								 "Select '3D Text Control' control the 3d text", "Select 'Help Window' to show or hide the help window",
-								 "Select 'Debugging Graphics' to toggle axis arrows or toggle debug axis", "Select 'Reset Camera Position' to reset the camera's position", "Pressing 'Q' to slow rotation",
-								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program"}; //
+								 "Select 'Debugging Graphics' to toggle axis arrows or toggle debug axis", "Select 'Reset Camera Position' to reset the camera's position", "Press 'Q' to slow rotation",
+								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program", "", "Note: Rotation must be disabled before resetting the camera back to defaults."}; //
 
 	for (int i = 0; i < sizeof(helpItems) / sizeof(helpItems[0]); i++)
 	{
 		drawHelpText(helpItems[i], 0, x, y);
-		y -= 15;
+		y -= 22;
 	}
 }
 void drawHelpText(std::string text, int length, int x, int y)
