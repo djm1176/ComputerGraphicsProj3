@@ -46,6 +46,8 @@ void resetRotationSpeed();
 
 void drawText(float, float, float, const char*, float);
 void drawBitmapText(float, float, float, const char*, float);
+void drawHelp();
+void drawHelpText(std::string text, int length, int x, int y);
 
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
