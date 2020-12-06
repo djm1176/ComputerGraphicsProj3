@@ -23,7 +23,7 @@
 
 constexpr bool USE_MULTISAMPLE = true; // Set to true to use anti-aliasing
 constexpr int WINDOW_SIZE[]{800, 600}; // The main window's width and height at start
-constexpr int HELP_SIZE[]{700, 300};   // The help window's width and height at start
+constexpr int HELP_SIZE[]{750, 300};   // The help window's width and height at start
 
 void mainWindowInit();
 void helpWindowInit();
@@ -447,10 +447,10 @@ void drawHelp()
 	int y = 180;
 	std::string helpItems[11] = {"Welcome to the 3D Advertisement for IPhone 3GS, Version 1.0, December 2020",
 								 "To change properties about the 3D model, right click the editor to view the menu",
-								 "   Select 'Rotation control' to enable or disable rotation", "   Select 'Adjust Rotation speed' to change the speed of rotation",
-								 "   Select '3D Text Control' control the 3d text", "   Select 'Help Window' to show or hide the help window",
+								 "Select 'Rotation control' to enable or disable rotation", "Select 'Adjust Rotation speed' to change the speed of rotation",
+								 "Select '3D Text Control' control the 3d text", "Select 'Help Window' to show or hide the help window",
 								 "Select 'Debugging Graphics' to toggle axis arrows or toggle debug axis", "Select 'Reset Camera Position' to reset the camera's position", "Pressing 'Q' to slow rotation",
-								 "Press 'E' to speed up rotation", "   Select 'Exit' to leave the program"}; //
+								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program"}; //
 
 	for (int i = 0; i < sizeof(helpItems) / sizeof(helpItems[0]); i++)
 	{
