@@ -38,6 +38,7 @@ void helpKeyboardCallback(unsigned char, int, int);
 
 void specialFuncCallback(int, int, int);
 void mouseCallback(int, int, int, int);
+void wheelCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
 void timer(int);
@@ -94,6 +95,7 @@ int main(int argc, char **argv)
 	glutKeyboardFunc(keyboardCallback);
 	glutSpecialFunc(specialFuncCallback);
 	glutMouseFunc(mouseCallback);
+	glutMouseWheelFunc(wheelCallback);
 	glutMotionFunc(motionCallback);
 	glutReshapeFunc(reshapeCallback);
 	glutTimerFunc(0, timer, 0);
@@ -391,6 +393,11 @@ void mouseCallback(int button, int state, int x, int y)
 
 	mouse_x = x;
 	mouse_y = y;
+}
+
+void wheelCallback(int wheel, int dir, int x, int y) {
+	camera.zoom(dir * 10);
+	std::cout << "Zoom" << std::endl;
 }
 
 void motionCallback(int x, int y)
