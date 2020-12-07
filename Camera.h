@@ -44,11 +44,13 @@ public:
 
 	//Move the camera in or out from the origin by offet units
 	void zoom(int offset) {
-		dist += offset;
-		if (dist > 300 || dist < 50) {
-			dist -= offset;
+		dist -= offset;
+		if (dist > 500 || dist < 100) {
+			dist += offset;
 			return;
 		}
+		std::cout << "Zoom: " << dist << std::endl;
+
 		glMatrixMode(GL_PROJECTION);
 		glTranslated(0, 0, offset);
 	}

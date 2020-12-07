@@ -1,7 +1,43 @@
 /*==================================================================================================
  COURSE:				  CSC 525/625
  ASSIGNMENT:			  Project 3
- PROGRAMMER:
+ PROGRAMMER:			  Eric McCullough
+							* Contributions
+								* Constant Frame Rate, Camera Auto Rotation
+							* Contribution %
+								* 14.3%
+						  Alex Webber
+							* Contributions
+								* Right-Click Menus
+							* Contribution %
+								* 14.3%
+						  Tyler Cardwell
+							* Contributions
+								* Obj File Format Research
+							* Contribution %
+								* 14.3%
+						  Daniel Moore
+							* Contributions
+								* Camera Movement, Mouse/Keyboard Controls
+								* Obj File Format Implementation
+							* Contribution %
+								* 14.3%
+						  John Meents
+							* Contributions
+								* Stroke and Bitmap Text Rendering Functions
+							* Contribution %
+								* 14.3%
+						  Ben Jinkerson
+							* Contributions
+								* Obj File Format Implementation
+								* Mesh Color Generation
+							* Contribution %
+								* 14.3%
+						  Dallas Bramel
+							* Contributions
+								* Help Window
+							* Contribution %
+								* 14.3%
  LAST MODIFIED DATE:	  11/29/2020
  DESCRIPTION:			  3D Interactive Advertisement
  NOTE:
@@ -72,7 +108,7 @@ double rotationSpeed{0.25};
 
 bool mouseDown = false, motionLastFrame = false;
 Camera camera;
-ObjFile teddy{"./models/teddy.obj"};
+ObjFile teddy{"C:/temp/models/teddy.obj"};
 
 int main(int argc, char **argv)
 {
@@ -89,7 +125,7 @@ int main(int argc, char **argv)
 	mainWindowInit();										// specify some settings
 	menuInit();
 
-	camera = Camera(0, 50, 200);
+	camera = Camera(0, 50, 250);
 
 	glutDisplayFunc(myDisplayCallback); // register a callback
 	glutKeyboardFunc(keyboardCallback);
@@ -280,7 +316,7 @@ void myDisplayCallback()
 	{
 		//Place all text drawing operations here
 		//x, y, z, text, font size 
-		drawText(-75, 80, 100, "Teddy Bear", 0.2);
+		drawText(-75, 120, 50, "Teddy Bear", 0.2);
 		drawBitmapText(60, 60, 0, "REAL FUR!", 0.30);
 		drawBitmapText(-140, 40, 0, "EXTRA soft!", 0.30);
 		drawBitmapText(0, -200, 0, "Includes lifetime warranty!", 0.30);
@@ -396,7 +432,6 @@ void mouseCallback(int button, int state, int x, int y)
 
 void wheelCallback(int wheel, int dir, int x, int y) {
 	camera.zoom(dir * 10);
-	std::cout << "Zoom" << std::endl;
 }
 
 void motionCallback(int x, int y)
