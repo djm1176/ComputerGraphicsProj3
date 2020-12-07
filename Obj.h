@@ -22,6 +22,7 @@ private:
 	}
 
 public:
+	std::vector<std::array<int, 3>> obj_colors;
 	ObjFile(std::string filepath) {
 		static const char* format{ "%c %f %f %f" };
 		std::ifstream in_obj(filepath);
@@ -47,6 +48,7 @@ public:
 				fcount++;
 				std::array<int, 3> f{ fx, fy, fz };
 				obj_faces.push_back(f);
+				obj_colors.push_back({ rand() % 50 ,rand() % 50, rand() % 200 + 55 });
 			}
 		}
 

@@ -100,9 +100,8 @@ int main(int argc, char **argv)
 	glutReshapeFunc(reshapeCallback);
 	glutTimerFunc(0, timer, 0);
 
-	//TODO: This is old code for making a help window, I commented it out for now
 	glutInitWindowSize(HELP_SIZE[0], HELP_SIZE[1]);
-	glutInitWindowPosition(1000, 50);
+	glutInitWindowPosition(16, 200);
 	helpWindow = glutCreateWindow("GLUT 3D Advertisement Help");
 	helpWindowInit(); // specify some settings
 	glutDisplayFunc(helpDisplayCallback);
@@ -273,12 +272,6 @@ void myDisplayCallback()
 		DebugUtils::draw_axes();
 
 	glColor3ub(100, 100, 100);
-	//x, y, z, text, font size 
-	drawText(-75, 80, 100, "Teddy Bear", 0.2);
-	drawBitmapText(60, 60, 0, "REAL FUR!", 0.30);
-	drawBitmapText(-140, 40, 0, "EXTRA soft!", 0.30);
-	drawBitmapText(0, -200, 0, "Includes lifetime warranty!", 0.30);
-
 
 	if (debug_grid)
 		DebugUtils::draw_grid();
@@ -286,10 +279,13 @@ void myDisplayCallback()
 	if (draw_text)
 	{
 		//Place all text drawing operations here
-
+		//x, y, z, text, font size 
+		drawText(-75, 80, 100, "Teddy Bear", 0.2);
+		drawBitmapText(60, 60, 0, "REAL FUR!", 0.30);
+		drawBitmapText(-140, 40, 0, "EXTRA soft!", 0.30);
+		drawBitmapText(0, -200, 0, "Includes lifetime warranty!", 0.30);
 		glColor3ub(100, 100, 100);
-		drawText(0, 100, 0, std::to_string(target_x).c_str(), 0.05);
-		drawText(0, 92, 0, std::to_string(target_y).c_str(), 0.05);
+
 	}
 
 	//Perform smooth camera rotation
@@ -313,11 +309,11 @@ void myDisplayCallback()
 	glPointSize(5);
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < teddy.getFaceCount(); i++)
+
 	{
-		int col = rand() % 100 + 155;
-		glColor3ub(col, col, col);
-		for (auto vertex : teddy.getTriangle(i))
-		{
+		glColor3ub(teddy.obj_colors[i][0], teddy.obj_colors[i][1], teddy.obj_colors[i][2]);
+		for (auto vertex : teddy.getTriangle(i)) {
+
 			glVertex3f(vertex[0] * model_scale, vertex[1] * model_scale, vertex[2] * model_scale);
 		}
 	}
@@ -471,12 +467,14 @@ void drawHelp()
 {
 	int x = -195;
 	int y = 180;
-	std::string helpItems[13] = {"Welcome to the 3D Advertisement for Teddy Bear, Version 1.0, December 2020",
+	std::string helpItems[] = {"Welcome to the 3D Advertisement for Teddy Bear, Version 1.0, December 2020",
 								 "To change properties about the 3D model, right click the editor to view the menu",
 								 "Select 'Rotation control' to enable or disable rotation", "Select 'Adjust Rotation speed' to change the speed of rotation",
 								 "Select '3D Text Control' control the 3d text", "Select 'Help Window' to show or hide the help window",
 								 "Select 'Debugging Graphics' to toggle axis arrows or toggle debug axis", "Select 'Reset Camera Position' to reset the camera's position", "Press 'Q' to slow rotation",
-								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program", "", "Note: Rotation must be disabled before resetting the camera back to defaults."}; //
+								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program", "", "Note: Rotation must be disabled before resetting the camera back to defaults.",
+								 "Use Scroll Wheel to zoom in and out of the model."
+	}; //
 
 	for (int i = 0; i < sizeof(helpItems) / sizeof(helpItems[0]); i++)
 	{
