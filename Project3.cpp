@@ -22,8 +22,8 @@
 #include "Obj.h"
 
 constexpr bool USE_MULTISAMPLE = true; // Set to true to use anti-aliasing
-constexpr int WINDOW_SIZE[]{800, 600}; // The main window's width and height at start
-constexpr int HELP_SIZE[]{750, 300};   // The help window's width and height at start
+constexpr int WINDOW_SIZE[]{ 800, 600 }; // The main window's width and height at start
+constexpr int HELP_SIZE[]{ 750, 300 };   // The help window's width and height at start
 
 void mainWindowInit();
 void helpWindowInit();
@@ -38,7 +38,6 @@ void helpKeyboardCallback(unsigned char, int, int);
 
 void specialFuncCallback(int, int, int);
 void mouseCallback(int, int, int, int);
-void wheelCallback(int, int, int, int);
 void motionCallback(int, int);
 void reshapeCallback(int, int);
 void timer(int);
@@ -52,11 +51,11 @@ void drawHelpText(std::string text, int length, int x, int y);
 
 int mainWindow, helpWindow;
 int mouse_x, mouse_y;
-double target_x{0.0}, target_y{0.0}, mouse_dx{0.0}, mouse_dy{0.0};
+double target_x{ 0.0 }, target_y{ 0.0 }, mouse_dx{ 0.0 }, mouse_dy{ 0.0 };
 
-bool debug_axes{false}, debug_grid{false}, draw_text{true};
+bool debug_axes{ false }, debug_grid{ false }, draw_text{ true };
 
-double model_scale{5.0};
+double model_scale{ 5.0 };
 
 //enabled		The camera is currently rotating automatically
 //paused		The user is dragging, and auto-rotation is 'paused' and will resume on mouse release
@@ -68,13 +67,13 @@ enum RotationMode
 	disabled
 };
 RotationMode autoRotation = RotationMode::enabled;
-double rotationSpeed{0.25};
+double rotationSpeed{ 0.25 };
 
 bool mouseDown = false, motionLastFrame = false;
 Camera camera;
-ObjFile teddy{"./models/teddy.obj"};
+ObjFile teddy{ "./models/teddy.obj" };
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 
 	glutInit(&argc, argv); // initialization
@@ -95,7 +94,6 @@ int main(int argc, char **argv)
 	glutKeyboardFunc(keyboardCallback);
 	glutSpecialFunc(specialFuncCallback);
 	glutMouseFunc(mouseCallback);
-	glutMouseWheelFunc(wheelCallback);
 	glutMotionFunc(motionCallback);
 	glutReshapeFunc(reshapeCallback);
 	glutTimerFunc(0, timer, 0);
@@ -274,11 +272,8 @@ void myDisplayCallback()
 
 	glColor3ub(100, 100, 100);
 	//x, y, z, text, font size 
-	drawText(-75, 80, 100, "Teddy Bear", 0.2);
-	drawBitmapText(60, 60, 0, "REAL FUR!", 0.30);
-	drawBitmapText(-140, 40, 0, "EXTRA soft!", 0.30);
-	drawBitmapText(0, -200, 0, "Includes lifetime warranty!", 0.30);
-
+	drawText(-100, 10, 100, "Teddy Bear", 0.25);
+	drawBitmapText(100, 60, 0, "Now extra soft!", 0.25);
 
 	if (debug_grid)
 		DebugUtils::draw_grid();
@@ -309,15 +304,20 @@ void myDisplayCallback()
 	}
 
 	//Draw the model
+	
 
+	
+
+		
 	glPointSize(5);
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < teddy.getFaceCount(); i++)
+
 	{
-		int col = rand() % 100 + 155;
-		glColor3ub(col, col, col);
+		glColor3ub(teddy.obj_colors[i][0], teddy.obj_colors[i][1], teddy.obj_colors[i][2]);
 		for (auto vertex : teddy.getTriangle(i))
 		{
+			
 			glVertex3f(vertex[0] * model_scale, vertex[1] * model_scale, vertex[2] * model_scale);
 		}
 	}
@@ -330,7 +330,7 @@ void myDisplayCallback()
 
 void drawText(float x, float y, float z, const char* text, float fontSize)
 {
-	const char *c;
+	const char* c;
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glScalef(fontSize, fontSize, fontSize);
@@ -396,11 +396,6 @@ void mouseCallback(int button, int state, int x, int y)
 
 	mouse_x = x;
 	mouse_y = y;
-}
-
-void wheelCallback(int wheel, int dir, int x, int y) {
-	camera.zoom(dir * 10);
-	std::cout << "Zoom" << std::endl;
 }
 
 void motionCallback(int x, int y)
@@ -471,12 +466,12 @@ void drawHelp()
 {
 	int x = -195;
 	int y = 180;
-	std::string helpItems[13] = {"Welcome to the 3D Advertisement for Teddy Bear, Version 1.0, December 2020",
+	std::string helpItems[13] = { "Welcome to the 3D Advertisement for Teddy Bear, Version 1.0, December 2020",
 								 "To change properties about the 3D model, right click the editor to view the menu",
 								 "Select 'Rotation control' to enable or disable rotation", "Select 'Adjust Rotation speed' to change the speed of rotation",
 								 "Select '3D Text Control' control the 3d text", "Select 'Help Window' to show or hide the help window",
 								 "Select 'Debugging Graphics' to toggle axis arrows or toggle debug axis", "Select 'Reset Camera Position' to reset the camera's position", "Press 'Q' to slow rotation",
-								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program", "", "Note: Rotation must be disabled before resetting the camera back to defaults."}; //
+								 "Press 'E' to speed up rotation", "Select 'Exit' to leave the program", "", "Note: Rotation must be disabled before resetting the camera back to defaults." }; //
 
 	for (int i = 0; i < sizeof(helpItems) / sizeof(helpItems[0]); i++)
 	{

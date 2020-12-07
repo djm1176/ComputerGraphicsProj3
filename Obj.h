@@ -12,6 +12,7 @@ class ObjFile {
 private:
 	std::vector<std::array<float, 3>> obj_vertices;
 	std::vector<std::array<int, 3>> obj_faces;
+	
 
 
 	void read(const char* buf, const char* format, ...) {
@@ -22,6 +23,7 @@ private:
 	}
 
 public:
+	std::vector<std::array<int, 3>> obj_colors;
 	ObjFile(std::string filepath) {
 		static const char* format{ "%c %f %f %f" };
 		std::ifstream in_obj(filepath);
@@ -40,13 +42,16 @@ public:
 
 			if (ch == 'v') {
 				vcount++;
-				std::array<float, 3> v{fx, fy, fz};
+				std::array<float, 3> v{ fx, fy, fz };
 				obj_vertices.push_back(v);
-			} else if (ch == 'f') {
+				
+			}
+			else if (ch == 'f') {
 				//This is face indices
 				fcount++;
 				std::array<int, 3> f{ fx, fy, fz };
 				obj_faces.push_back(f);
+				obj_colors.push_back({ rand() % 50 ,rand() %50, rand() %200+55});
 			}
 		}
 
@@ -63,9 +68,9 @@ public:
 
 	const std::array<std::array<float, 3>, 3> getTriangle(int index) const {
 		auto indices = obj_faces.at(index);
-		std::array<std::array<float, 3>, 3> triangle{	obj_vertices.at(indices.at(0) - 1),
+		std::array<std::array<float, 3>, 3> triangle{ obj_vertices.at(indices.at(0) - 1),
 														obj_vertices.at(indices.at(1) - 1),
-														obj_vertices.at(indices.at(2) - 1)};
+														obj_vertices.at(indices.at(2) - 1) };
 		return triangle;
 	}
 

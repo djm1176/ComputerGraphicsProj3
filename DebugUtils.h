@@ -5,7 +5,7 @@ Performs utility debug features for the main program
 
 #include <GL/freeglut.h>
 namespace DebugUtils {
-	
+
 	//Draws XYZ coordinate axes at the origin, with each line extending 50 units.
 	void draw_axes() {
 		glBegin(GL_LINES);
@@ -27,7 +27,7 @@ namespace DebugUtils {
 	void draw_grid() {
 		glBegin(GL_LINES);
 		glColor3ub(100, 100, 100);
-		
+
 		for (int x = -500; x <= 500; x += 100) {
 			glVertex3i(x, 0, -500);
 			glVertex3i(x, 0, 500);
