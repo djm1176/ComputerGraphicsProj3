@@ -320,6 +320,7 @@ void myDisplayCallback()
 		drawBitmapText(60, 60, 0, "REAL FUR!", 0.30);
 		drawBitmapText(-140, 40, 0, "EXTRA soft!", 0.30);
 		drawBitmapText(0, -200, 0, "Includes lifetime warranty!", 0.30);
+		drawBitmapText(0, -225, 0, "On sale for $9.99 today only!", .10);
 		glColor3ub(100, 100, 100);
 
 	}
