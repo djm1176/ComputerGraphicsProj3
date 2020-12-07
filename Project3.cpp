@@ -38,9 +38,9 @@
 								* Help Window
 							* Contribution %
 								* 14.3%
- LAST MODIFIED DATE:	  11/29/2020
+ LAST MODIFIED DATE:	  12/6/2020
  DESCRIPTION:			  3D Interactive Advertisement
- NOTE:
+ NOTE:					  Copy the 'models' folder into the "C:/TEMP/" directory
  FILES:					  Project3.cpp, (ComputerGraphicsProj3.sln, ...)
  IDE/COMPILER:			  Microsoft Visual Studio 2019
  INSTRUCTION FOR COMPILATION AND EXECUTION:
